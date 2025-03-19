@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: company-website
+  namespace: techstart-website
+  labels:
+    app: company-website
+spec:
+  replicas: 3  # Run 3 instances for high availability
+  selector:
+    matchLabels:
+      app: company-website
+  template:
+    metadata:
+      labels:
+        app: company-website
+    spec:
+      containers:
+      - name: website
+        image: nginx:1.21  # Using Nginx to serve static content
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        readinessProbe:  # Ensure the container is ready to receive traffic
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:  # Restart if the container becomes unhealthy
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+---

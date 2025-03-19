@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: company-website
+  namespace: techstart-website
+spec:
+  type: LoadBalancer  # Makes the service accessible outside the cluster
+  selector:
+    app: company-website  # Selects pods with this label
+  ports:
+  - port: 80  # Service port
+    targetPort: 80  # Container port
+    nodePort: 30080  # Port on the node
+
+---
