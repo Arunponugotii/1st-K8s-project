@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-catalog
+  namespace: shopfast
+
+spec:
+  type: ClusterIP # only accessible within the cluster
+  selector:
+    app: product-catalog
+    ports:
+    - port: 80
+      targetPort: 3550
+      
+
