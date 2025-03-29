@@ -1,0 +1,1 @@
+kubectl port-forward -n shopfast service/frontend 8080:80
