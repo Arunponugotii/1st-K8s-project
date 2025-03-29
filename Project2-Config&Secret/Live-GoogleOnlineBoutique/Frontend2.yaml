@@ -1,0 +1,58 @@
+# frontend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: shopfast
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: web-ui
+        image: gcr.io/google-samples/microservices-demo/frontend:v0.8.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        # Our actual services
+        - name: PRODUCT_CATALOG_SERVICE_ADDR
+          value: "product-catalog:80"
+        - name: CHECKOUT_SERVICE_ADDR
+          value: "auth-service:80"
+        - name: RECOMMENDATION_SERVICE_ADDR
+          value: "recommendation:80"
+        # Required placeholders - using our existing services
+        - name: CURRENCY_SERVICE_ADDR
+          value: "product-catalog:80"  # Using product catalog as placeholder
+        - name: CART_SERVICE_ADDR
+          value: "product-catalog:80"  # Using product catalog as placeholder
+        - name: SHIPPING_SERVICE_ADDR
+          value: "product-catalog:80"  # Using product catalog as placeholder
+        - name: AD_SERVICE_ADDR
+          value: "recommendation:80"   # Using recommendation as placeholder
+        - name: EMAIL_SERVICE_ADDR
+          value: "auth-service:80"     # Using auth-service as placeholder
+        - name: PAYMENT_SERVICE_ADDR
+          value: "auth-service:80"     # Using auth-service as placeholder
+        # Additional required environment variables
+        - name: DISABLE_TRACING
+          value: "1"
+        - name: DISABLE_PROFILER
+          value: "1"
+        - name: DISABLE_DEBUGGER 
+          value: "1"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
